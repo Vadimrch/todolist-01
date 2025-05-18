@@ -36,6 +36,10 @@ function App() {
         // setTasks(nextState)
         setTasks([...tasks, {id: v1(), title, isDone: false}])
     }
+    const changeTasksStatus = (taskid: string, isDone: boolean) => {
+        const nextState: Task[] = tasks.map(t => t.id === taskid ? {...t, isDone: isDone}: t)
+        setTasks(nextState)
+    }
 
     const [filter, setFilter] = useState<FilterValues>("all")
     let filterTasks: Task[] = tasks
@@ -57,11 +61,13 @@ function App() {
     return (
         <div className="app">
             <TodolistItem
+                filter={filter}
                 title={todolistTitle}
                 tasks={filterTasks}
                 deleteTask={deleteTask}
                 changeFilter={changeFilter}
                 createTask={createTask}
+                changeTasksStatus={changeTasksStatus}
 
             />
             {/*<TodolistItem title = {todolistTitle_2} tasks = {tasks2} />*/}
