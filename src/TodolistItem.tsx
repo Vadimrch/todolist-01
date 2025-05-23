@@ -3,13 +3,15 @@ import {FilterValues} from "./App.tsx";
 import {ChangeEvent, useState} from "react";
 
 type Props = {
+    todolistId: string
     title: string
     tasks: Task[]
     filter: FilterValues
-    deleteTask: (taskId: string) => void
-    changeFilter: (FilterValue: FilterValues) => void
-    createTask: (title: string) => void
-    changeTasksStatus: (taskid: string, isDone: boolean) => void
+    deleteTask: (taskId: string, todolistId: string) => void
+    changeFilter: (FilterValue: FilterValues, todolistId: string) => void
+    createTask: (title: string, todolistId: string) => void
+    changeTasksStatus: (taskid: string, isDone: boolean, todolistId: string) => void
+    deleteTodolist: (todolistId: string) => void
 }
 
 export type Task = {
@@ -18,44 +20,44 @@ export type Task = {
     isDone: boolean
 }
 export const TodolistItem = ({
-                                 title,
-                                 tasks,
-                                 filter,
-                                 deleteTask,
-                                 changeFilter,
-                                 createTask,
-                                 changeTasksStatus
-                             }: Props) => {
-    // const title = props.title
-    // const tasks = props.tasks
-    // const {title:title, tasks:tasks} = props
-    // const {title, tasks} = props
+       todolistId,
+       title,
+        tasks,
+        filter,
+        deleteTask,
+        changeFilter,
+        createTask,
+        changeTasksStatus,
+        deleteTodolist
+ }: Props) => {
 
     const [taskTitle, setTaskTitle] = useState("")
     const [error, setError] = useState<boolean>(false)
 
 
     const createChangeFilterHandler = (filtervalue: FilterValues) => {
-        return () => changeFilter(filtervalue)
+        return () => changeFilter(filtervalue, todolistId)
     }
 
     const createTaskHandler = () => {
         const trimmedTitle = taskTitle.trim()
         if (trimmedTitle) {
-            createTask(taskTitle)
+            createTask(taskTitle, todolistId)
         } else {
             setError(true)
         }
-        createTask(taskTitle)
+        createTask(taskTitle, todolistId)
         setTaskTitle("")
     }
+
+    const deleteTodolistHandler = () => deleteTodolist(todolistId)
 
     const tasksList = tasks.length
         ? <ul>
             {tasks.map(task => {
-                const deleteTaskHandler = () => deleteTask(task.id)
+                const deleteTaskHandler = () => deleteTask(task.id, todolistId)
                 const changeTaskStatusHandler =
-                    (e: ChangeEvent<HTMLInputElement>) => changeTasksStatus(task.id, e.currentTarget.checked)
+                    (e: ChangeEvent<HTMLInputElement>) => changeTasksStatus(task.id, e.currentTarget.checked, todolistId)
 
                 return (
                     <li
@@ -79,7 +81,10 @@ export const TodolistItem = ({
     return (
 
         <div>
-            <h3>{title}</h3>
+            <h3>
+                {title}
+                <Button title="x" onClickHandler={deleteTodolistHandler} />
+            </h3>
             <div>
                 <input
                     value={taskTitle}
@@ -87,8 +92,8 @@ export const TodolistItem = ({
                     onChange={(e) => {
                         error && setError(false)
                         if (taskTitle.length < 10) {
-                        setTaskTitle(e.currentTarget.value)
-                            }
+                            setTaskTitle(e.currentTarget.value)
+                        }
                     }}
                     onKeyDown={(e) => {
                         if (e.key === "Enter" && taskTitle && taskTitle.length <= 10) {
