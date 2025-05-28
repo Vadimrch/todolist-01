@@ -66,6 +66,13 @@ function App() {
         delete tasks[todolistId]
     }
 
+    // create todolist
+
+
+    // update todolist
+
+
+
     const getFilteredTasks = (tasks: Task[], filterValue: FilterValues) => {
 
         let filteredTasks: Task[] = tasks
