@@ -1,6 +1,7 @@
-import {Button} from "./Button.tsx";
+// import {Button} from "./Button.tsx";
 import {FilterValues} from "./App.tsx";
 import {ChangeEvent, useState} from "react";
+import Button from '@mui/material/Button';
 
 type Props = {
     todolistId: string
@@ -114,11 +115,13 @@ export const TodolistItem = ({
 
             {tasksList}
             <div>
+
                 <Button
-                    className={filter === "all" ? "filter-btn-active" : undefined}
-                    title="All"
                     onClickHandler={createChangeFilterHandler("all")}
-                />
+                    variant="contained"
+                    size="small"
+                    color="primary"
+                >Все</Button>
                 <Button
                     className={filter === "active" ? "filter-btn-active" : undefined}
                     title="Active"
